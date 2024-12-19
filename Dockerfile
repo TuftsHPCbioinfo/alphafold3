@@ -15,7 +15,7 @@ FROM nvidia/cuda:12.6.0-base-ubuntu22.04
 # git is required for pyproject.toml toolchain's use of CMakeLists.txt.
 RUN apt update --quiet \
     && apt install --yes --quiet software-properties-common \
-    && apt install --yes --quiet git wget
+    && apt install --yes --quiet git wget zstd
 
 # Get apt repository of specific Python versions. Then install Python. Tell APT
 # this isn't an interactive TTY to avoid timezone prompt when installing.
@@ -37,8 +37,8 @@ RUN mkdir /hmmer_build /hmmer ; \
 
 # Clone the AlphaFold 3 source code and
 # set the working directory to there.
-RUN git clone https://github.com/google-deepmind/alphafold3.git /app/alphafold
-WORKDIR /app/alphafold
+RUN git clone https://github.com/google-deepmind/alphafold3.git /app/alphafold3
+WORKDIR /app/alphafold3
 
 # Install the Python dependencies AlphaFold 3 needs.
 RUN pip3 install -r dev-requirements.txt
@@ -53,8 +53,8 @@ ENV XLA_FLAGS="--xla_gpu_enable_triton_gemm=false"
 # Memory settings used for folding up to 5,120 tokens on A100 80 GB.
 ENV XLA_PYTHON_CLIENT_PREALLOCATE=true
 ENV XLA_CLIENT_MEM_FRACTION=0.95
-ENV PATH=/app/alphafold:$PATH
+ENV PATH=/app/alphafold3:$PATH
 
-RUN sed -i '1 i #!/usr/bin/env python3' *.py && chmod +x *.py
+RUN sed -i '1 i #!/usr/bin/env python3' *.py && chmod +x *.py && chmod +x *.sh
 
-CMD ["python3", "/app/alphafold/run_alphafold.py"]
+CMD ["python3", "/app/alphafold3/run_alphafold.py"]
