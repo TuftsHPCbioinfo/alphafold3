@@ -53,6 +53,8 @@ ENV XLA_FLAGS="--xla_gpu_enable_triton_gemm=false"
 # Memory settings used for folding up to 5,120 tokens on A100 80 GB.
 ENV XLA_PYTHON_CLIENT_PREALLOCATE=true
 ENV XLA_CLIENT_MEM_FRACTION=0.95
+ENV PATH=/app/alphafold:$PATH
 
-RUN sed -i '1 i #!/usr/bin/env python3' *.py
-CMD ["python3", "run_alphafold.py"]
+RUN sed -i '1 i #!/usr/bin/env python3' *.py && chmod +x *.py
+
+CMD ["python3", "/app/alphafold/run_alphafold.py"]
