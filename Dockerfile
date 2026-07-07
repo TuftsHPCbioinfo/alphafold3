@@ -32,10 +32,10 @@ RUN uv venv $UV_PROJECT_ENVIRONMENT
 
 ENV PATH="/hmmer/bin:/alphafold3_venv/bin:$PATH"
 
-# Clone AlphaFold 3 v3.0.2 source code. Doing this before building HMMER means
+# Clone AlphaFold 3 v3.0.3 source code. Doing this before building HMMER means
 # the jackhmmer_seq_limit.patch is available without a separate COPY, and the
 # build no longer requires any local source files in the Docker build context.
-RUN git clone --branch v3.0.2 --depth 1 \
+RUN git clone --branch v3.0.3 --depth 1 \
     https://github.com/google-deepmind/alphafold3.git /app/alphafold
 
 # Install HMMER. Do so before the heavy uv sync step so Docker can cache the
